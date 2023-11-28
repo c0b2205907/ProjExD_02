@@ -36,8 +36,7 @@ def main():
     kk_rct.center = 900,400
     bb_img = pg.Surface((20,20))  #練習1　透明のSurfaceを作る
     bb_img.set_colorkey((0,0,0))
-    #bb_imgs=0
-    kk_img = pg.transform.flip(kk_img,True,False)
+    
     pg.draw.circle(bb_img,(255,0,0),(10,10),10)
     bb_rct=bb_img.get_rect()  #練習2　爆弾
     bb_rct.centerx = random.randint(0,WIDTH)
