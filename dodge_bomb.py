@@ -10,6 +10,8 @@ delta ={
     pg.K_RIGHT:(+5,0)
 }
 
+
+
 def check_bound(rct: pg.Rect) ->tuple[bool,bool]:
     """
     オブジェクトが画面内or画面外を判断し、真理値タプルを返す関数
@@ -34,12 +36,24 @@ def main():
     kk_rct.center = 900,400
     bb_img = pg.Surface((20,20))  #練習1　透明のSurfaceを作る
     bb_img.set_colorkey((0,0,0))
+    #bb_imgs=0
+    kk_img = pg.transform.flip(kk_img,True,False)
     pg.draw.circle(bb_img,(255,0,0),(10,10),10)
     bb_rct=bb_img.get_rect()  #練習2　爆弾
     bb_rct.centerx = random.randint(0,WIDTH)
     bb_rct.centery = random.randint(0,HEIGHT)
-
     vx,vy=+5,+5
+
+    delta1={
+    (0,-5):pg.transform.rotozoom(pg.transform.flip(kk_img,True,False),90,1),
+    (0,+5):pg.transform.rotozoom(pg.transform.flip(kk_img,True,False),-90,1),
+    (+5,0):pg.transform.rotozoom(pg.transform.flip(kk_img,True,False),0,1),
+    (-5,0):pg.transform.rotozoom(kk_img,0,1),
+    (-5,-5):pg.transform.rotozoom(kk_img,-45,1),
+    (-5,+5):pg.transform.rotozoom(kk_img,45,1),
+    (+5,-5):pg.transform.rotozoom(pg.transform.flip(kk_img,True,False),45,1),
+    (+5,+5):pg.transform.rotozoom(pg.transform.flip(kk_img,True,False),-45,1)
+    }
 
     clock = pg.time.Clock()
     tmr = 0
@@ -58,11 +72,19 @@ def main():
             if key_lst[k]:  #キーが押されたら
                 sum_mv[0] += tpl[0]
                 sum_mv[1] += tpl[1]
+                
+        
+
+        if tuple(sum_mv) in delta1.keys():
+            kk_img = delta1[tuple(sum_mv)]
+
 
         screen.blit(bg_img, [0, 0])
         kk_rct.move_ip(sum_mv[0],sum_mv[1])
         if check_bound(kk_rct) !=(True,True):
             kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
+            
+
         screen.blit(kk_img,kk_rct)
         bb_rct.move_ip(vx,vy)
         yoko,tate = check_bound(bb_rct)
